@@ -1,0 +1,104 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import scipy
+# description
+This data approach student achievement in secondary education of two Portuguese schools. The data attributes include student grades, demographic, social and school related features) and it was collected by using school reports and questionnaires. Two datasets are provided regarding the performance in two distinct subjects: Mathematics (mat) and Portuguese language (por). In [Cortez and Silva, 2008], the two datasets were modeled under binary. https://www.kaggle.com/datasets/whenamancodes/alcohol-effects-on-study
+dfm = pd.read_csv("Maths.csv")
+dfp = pd.read_csv("Portuguese.csv")
+dfm.head()
+dfp.head()
+print('math shape', dfm.shape)
+print('portuguese shape', dfp.shape)
+dfm.columns.to_list()
+print('math')
+dfm.info()
+print('\nportuguese')
+dfp.info()
+###### dados faltantes
+dfm.isna().sum() #math 0 na
+dfp.isna().sum() #portuguese 0 na
+###### balanceamento dos dados
+cm = dfm.columns.to_list()
+cp = dfp.columns.to_list()
+for x in cm:
+    print(f'Math column: {x}\n{dfm[x].value_counts()}\n')
+    
+    if dfm[x].dtypes == "int64":
+        valores =  [dfm[x]]
+        media = np.average(valores)
+        variancia = np.var(valores)
+        desvio = np.std(valores)
+        mediana = np.median(valores)
+
+        print(f'{x}\nmedia: {media} \nvariancia: {variancia} \ndesvio: {desvio} \nmediana: {mediana} \n')
+    else:
+        pass
+    print(f'{15*"====="}')
+for x in cp:
+    print(f'Portuguese column: {x}\n{dfp[x].value_counts()}\n')
+    
+    if dfp[x].dtypes == "int64":
+        valores =  [dfp[x]]
+        media = np.average(valores)
+        variancia = np.var(valores)
+        desvio = np.std(valores)
+        mediana = np.median(valores)
+
+        print(f'{x}\nmedia: {media} \nvariancia: {variancia} \ndesvio: {desvio} \nmediana: {mediana} \n')
+    else:
+        pass
+    print(f'{15*"====="}')
+para melhor visualizacao criarei graficos de barra
+
+for x in cm :
+    print(x)
+    sns.countplot(data=dfm, x=x, palette="pastel")
+    plt.show()
+    """fig = plt.gcf()
+    fig.savefig(f'{x}')"""
+
+for x in cp :
+    print(x)
+    sns.countplot(data=dfp, x=x, palette="pastel" )
+    plt.show()
+    """fig = plt.gcf()
+    fig.savefig(f'{x}')"""
+for x in cp:
+    dfx = dfp[x].value_counts()
+    colunas = dfx.index.to_list()
+    valores = dfx.values
+    df1 = pd.DataFrame([valores], columns=colunas,index=(x,1,2,3,4,5,6))
+    df1.drop(index=[1,2,3,4,5,6],inplace=True)
+    df1.plot.barh(stacked=True)
+
+for x in cm:
+    dfx = dfm[x].value_counts()
+    colunas = dfx.index.to_list()
+    valores = dfx.values
+    df1 = pd.DataFrame([valores], columns=colunas,index=(x,1,2,3,4,5,6))
+    df1.drop(index=[1,2,3,4,5,6],inplace=True)
+    df1.plot.barh(stacked=True)
+plt.figure(figsize=(15,8))
+heatmap = sns.heatmap(data=dfm.corr(method='pearson'),annot=True )
+print('correlação dfm method= pearson')
+plt.figure(figsize=(15,8))
+heatmap = sns.heatmap(data=dfm.corr(method='kendall'),annot=True )
+print('correlação dfm method= kendall')
+plt.figure(figsize=(15,8))
+heatmap = sns.heatmap(data=dfm.corr(method='spearman'),annot=True )
+print('correlação dfm method= spearman')
+plt.figure(figsize=(15,8))
+heatmap = sns.heatmap(data=dfp.corr(method='pearson'),annot=True )
+print('correlação dfp method= pearson')
+plt.figure(figsize=(15,8))
+heatmap = sns.heatmap(data=dfm.corr(method='kendall'),annot=True )
+print('correlação dfp method= kendall')
+plt.figure(figsize=(15,8))
+heatmap = sns.heatmap(data=dfm.corr(method='spearman'),annot=True )
+print('correlação dfp method= spearman')
+sns.boxplot(dfm, x=dfm['age'], y=dfm['Dalc'])
+sns.boxplot(dfp, x=dfp['age'], y=dfp['Dalc'])
+sns.boxplot(dfm, x=dfm['age'], y=dfm['Walc'])
+sns.boxplot(dfp, x=dfp['age'], y=dfp['Walc'])
